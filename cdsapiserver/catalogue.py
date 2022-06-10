@@ -1,4 +1,39 @@
-from fastapi import APIRouter
+from typing import Optional
+
+from fastapi import APIRouter, Request
+from pydantic import BaseModel
+
+
+class Link(BaseModel):
+    href: str
+    rel: str
+    type: Optional[str]
+    hreflang: Optional[str]
+    title: Optional[str]
+    length: Optional[int]
+
+
+class CollectionSummary(BaseModel):
+    id: str
+    title: Optional[str]
+    description: Optional[str]
+    attribution: Optional[str]
+    links: list[Link]
+    # extent: List[Extent] = []
+    itemType: Optional[str]
+    # crs: List[str] = []
+
+
+class Collection(CollectionSummary):
+    data_type: str  # 'Gridded'
+    # variables: list[str]
+    # licences: list[Licence]
+
+
+class Collections(BaseModel):
+    collections: list[CollectionSummary]
+    links: list[Link]
+
 
 router = APIRouter(
     prefix="/collections",
@@ -6,36 +41,34 @@ router = APIRouter(
 )
 
 
-@router.get("/")
-async def collections():
-    return [
-        {
-            "id": "1234567890",
-            "title": "Example Collection Description Response",
-            "description": "This is an example of a Collection Description in JSON format",
-            "links": [
-                {
-                    "href": "http://data.example.org/collections.json",
-                    "rel": "self",
-                    "type": "application/json",
-                    "title": "this document",
+@router.get("/", response_model=Collections)
+async def collections(request: Request) -> Collections:
+    base = request.url_for("collections")
+    return Collections(
+        collections=[
+            {
+                "id": "reanalysis-era5-pressure-levels",
+                "title": "ERA5 hourly data on pressure levels from 1979 to present",
+                "description": "ERA5 is the fifth generation ECMWF reanalysis for the global climate…",
+                "itemType": "dataset",
+                "links": [
+                    {
+                        "href": f"{base}reanalysis-era5-pressure-levels",
+                        "rel": "self",
+                        "type": "application/json",
+                    },
+                ],
+                "extent": {
+                    "spatial": [-180, -90, 180, 90],
+                    "temporal": ["1979-01-11T00:00:00Z", ".."],
                 },
-                {
-                    "href": "http://data.example.org/collections.html",
-                    "rel": "alternate",
-                    "type": "text/html",
-                    "title": "this document as HTML",
-                },
-                {
-                    "href": "http://schemas.example.org/1.0/foobar.xsd",
-                    "rel": "describedby",
-                    "type": "application/xml",
-                    "title": "XML schema for Acme Corporation data",
-                },
-            ],
-            "extent": {
-                "spatial": [7.01, 50.63, 7.22, 50.78],
-                "temporal": ["2010-02-15T12:34:56Z", "2018-03-18T12:11:00Z"],
+            }
+        ],
+        links=[
+            {
+                "href": base,
+                "rel": "self",
+                "type": "application/json",
             },
-        }
-    ]
+        ],
+    )
