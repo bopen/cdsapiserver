@@ -1,6 +1,6 @@
 {
   "template": "https://github.com/bopen/cookiecutter-conda-package",
-  "commit": "5829817a3c0fceedfbd0ed236ae6b5d17f2c924e",
+  "commit": "794c2e8c1c89325a17560ad16307e6d784fc59ef",
   "checkout": null,
   "context": {
     "cookiecutter": {
