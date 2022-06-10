@@ -26,4 +26,4 @@ docker-run:
 # local targets
 
 start:
-	uvicorn --reload --log-level info --workers 1 app:app
+	uvicorn --reload --log-level info --workers 1 cdsapiserver:app

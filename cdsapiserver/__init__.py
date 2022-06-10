@@ -21,3 +21,10 @@ except ImportError:  # pragma: no cover
     __version__ = "999"
 
 __all__ = ["__version__"]
+
+from fastapi import FastAPI
+
+from . import catalogue
+
+app = FastAPI()
+app.include_router(catalogue.router)
