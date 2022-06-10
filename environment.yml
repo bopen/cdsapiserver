@@ -3,8 +3,10 @@ channels:
 - nodefaults
 dependencies:
 - cruft
+- fastapi
 - make
 - mypy
 - pre-commit
 - pytest
 - pytest-cov
+- uvicorn

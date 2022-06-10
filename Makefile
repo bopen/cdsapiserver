@@ -22,4 +22,4 @@ image:
 	docker build -t $(PROJECT) .
 
 start:
-	docker run --rm -ti -v $(PWD):/srv $(PROJECT)
+	uvicorn --reload --log-level info --workers 1 app:app
