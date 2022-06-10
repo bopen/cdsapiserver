@@ -17,9 +17,13 @@ type-check:
 conda-env-update:
 	$(CONDA) env update $(CONDAFLAGS) -f environment.yml
 
-
-image:
+docker-build:
 	docker build -t $(PROJECT) .
+
+docker-run:
+	docker run --rm -ti -v $(PWD):/srv $(PROJECT)
+
+# local targets
 
 start:
 	uvicorn --reload --log-level info --workers 1 app:app
